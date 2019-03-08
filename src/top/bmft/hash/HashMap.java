@@ -2,7 +2,8 @@ package top.bmft.hash;
 
 public class HashMap {
     private static final float adaptRate = 0.75f;
-    private int size = 16;//数组长度
+    private static final int defaultSize = 16;
+    private int size;//数组长度
     private int capacity;//元素总数
     private Node[] box;//具体value存放数组
     private int threshold;//扩容临界值
@@ -17,7 +18,7 @@ public class HashMap {
     }
     
     public HashMap(){
-        box = new Node[this.size];
+        this(defaultSize);
     }
     
     private int hash(Object key){
@@ -31,10 +32,10 @@ public class HashMap {
         Node node = box[index];
         if(node == null){
             box[index] = new Node(key, value);
+            capacity++;
         } else {
             box[index] = node.merge(key, value);
         }
-        capacity++;
         adaptCapacity();
     }
     
@@ -48,12 +49,14 @@ public class HashMap {
             return null;
         } else if(key.equals(node.k)){
             box[index] = node.next;
+            capacity--;
         } else {
             Node p = node;
             node = node.next;
             while(node != null){
                 if(key.equals(node.k)){
                     p.next = node.next;
+                    capacity--;
                     return node.v;
                 }
                 p = node;
@@ -120,15 +123,18 @@ public class HashMap {
         }
         
         public Node merge(String key, Object obj){
-            Node node = this.next;
+            Node node = this;
             while(node != null){
-                if(key.equals(k)){
+                if(key.equals(node.k)){
                     node.v = obj;
                     break;
                 }
+                node = node.next;
             }
             if(node == null){
-                return add(key, obj);
+                node = add(key, obj);
+                capacity++;
+                return node;
             } else {
                 return node;
             }
