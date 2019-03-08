@@ -2,9 +2,10 @@ package top.bmft.hash;
 
 public class HashMap {
     private static final float adaptRate = 0.75f;
-    private int size = 8;//数组长度
+    private int size = 16;//数组长度
     private int capacity;//元素总数
     private Node[] box;//具体value存放数组
+    private int threshold;//扩容临界值
     
     public HashMap(int size){
         if(size <= 0){
@@ -12,6 +13,7 @@ public class HashMap {
         }
         this.size = size;
         box = new Node[size];
+        threshold = (int) (size * adaptRate);
     }
     
     public HashMap(){
@@ -66,12 +68,12 @@ public class HashMap {
     }
     
     private void adaptCapacity(){
-        float limit = size * adaptRate;
-        if(capacity < limit){
+        if(capacity < threshold){
             return;
         }
         int oldSize = size;
         size = oldSize << 1;
+        threshold = threshold << 1;
         Node[] newBox = new Node[size];
         for(int i = 0; i < oldSize; i++){
             Node node = box[i];
