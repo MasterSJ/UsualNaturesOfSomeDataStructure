@@ -6,23 +6,41 @@ import top.bmft.hash.HashMap;
 
 public class TestHashMap {
     public static void main(String[] args){
-        testJdkMap();
-        testMyMap();
+//        testJdkMap();
+//        testMyMap();
+        testRemove();
+    }
+    
+    public static void testRemove(){
+        HashMap map = new HashMap();
+        for(int i=0; i < 40; i++){
+            map.put(String.valueOf(i), "2000" + i);
+        }
+        System.out.println(map.toString());
+        map.remove("11");
+        map.remove("13");
+        map.remove("32");
+        map.remove("34");
+        System.out.println("---------------------");
+        System.out.println(map.toStringDetail());
     }
     
     public static void testMyMap(){
+        System.out.println();
         HashMap map = new HashMap();
-        ArrayList pay = new ArrayList(50);
+        long[] pay = new long[50];
         long start = System.nanoTime();
         long interval = 0;
         for(int i=0; i < 50; i++){
             map.put(String.valueOf(i), "2000" + i);
             long time = System.nanoTime() - start;
-            pay.add(time - interval);
+            pay[i] = time - interval;
             interval = time;
         }
         System.out.println(interval);
-        System.out.println(pay);
+        for(int i=0; i < 50; i++){
+            System.out.print(pay[i] + ", ");
+        }
         for(int i=0; i < 50; i++){
             map.get(String.valueOf(20000 - 1 - i));
         }
@@ -30,18 +48,21 @@ public class TestHashMap {
     
 
     public static void testJdkMap(){
+        System.out.println();
         java.util.HashMap map = new java.util.HashMap();
-        ArrayList pay = new ArrayList(50);
+        long[] pay = new long[50];
         long start = System.nanoTime();
         long interval = 0;
         for(int i=0; i < 50; i++){
             map.put(String.valueOf(i), "2000" + i);
             long time = System.nanoTime() - start;
-            pay.add(time - interval);
+            pay[i] = time - interval;
             interval = time;
         }
         System.out.println(interval);
-        System.out.println(pay);
+        for(int i=0; i < 50; i++){
+            System.out.print(pay[i] + ", ");
+        }
         for(int i=0; i < 50; i++){
             map.get(String.valueOf(20000 - 1 - i));
         }

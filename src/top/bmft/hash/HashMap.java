@@ -2,9 +2,9 @@ package top.bmft.hash;
 
 public class HashMap {
     private static final float adaptRate = 0.75f;
-    private int size = 8;
-    private int capacity;
-    private Node[] box;
+    private int size = 8;//数组长度
+    private int capacity;//元素总数
+    private Node[] box;//具体value存放数组
     
     public HashMap(int size){
         if(size <= 0){
@@ -30,10 +30,35 @@ public class HashMap {
         if(node == null){
             box[index] = new Node(key, value);
         } else {
-            box[index] = node.add(key, value);
+            box[index] = node.merge(key, value);
         }
         capacity++;
         adaptCapacity();
+    }
+    
+    public Object remove(String key){
+        if(key == null){
+            return null;
+        }
+        int index = hash(key);
+        Node node = box[index];
+        if(node == null){
+            return null;
+        } else if(key.equals(node.k)){
+            box[index] = node.next;
+        } else {
+            Node p = node;
+            node = node.next;
+            while(node != null){
+                if(key.equals(node.k)){
+                    p.next = node.next;
+                    return node.v;
+                }
+                p = node;
+                node = node.next;
+            }
+        }
+        return null;
     }
     
     public int size(){
@@ -91,6 +116,22 @@ public class HashMap {
             v = obj;
             next = null;
         }
+        
+        public Node merge(String key, Object obj){
+            Node node = this.next;
+            while(node != null){
+                if(key.equals(k)){
+                    node.v = obj;
+                    break;
+                }
+            }
+            if(node == null){
+                return add(key, obj);
+            } else {
+                return node;
+            }
+        }
+        
         public Node add(String key, Object obj){
             Node node = new Node(key, obj);
             node.next = this;
@@ -102,9 +143,27 @@ public class HashMap {
         StringBuilder sb = new StringBuilder("{");
         for(int i = 0; i < size; i++){
             Node node = box[i];
-            sb.append("bucket" + i + "[");
             while(node != null){
-                if(sb.length() > 9){
+                if(sb.length() > 1){
+                    sb.append(", ");
+                }
+                sb.append(node.k).append(":").append(node.v);
+                node = node.next;
+            }
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+    
+    public String toStringDetail(){
+        StringBuilder sb = new StringBuilder("{\n");
+        for(int i = 0; i < size; i++){
+            Node node = box[i];
+            sb.append("bucket" + i + "[");
+            int innerCount = 0;
+            while(node != null){
+                innerCount++;
+                if(innerCount > 1){
                     sb.append(", ");
                 }
                 sb.append(node.k).append(":").append(node.v);
