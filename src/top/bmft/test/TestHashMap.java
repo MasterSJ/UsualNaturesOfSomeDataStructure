@@ -12,15 +12,15 @@ public class TestHashMap {
     }
     
     public static void testRemove(){
-        HashMap map = new HashMap();
+        HashMap<Integer, String> map = new HashMap();
         for(int i=0; i < 40; i++){
-            map.put(String.valueOf(i), "2000" + i);
+            map.put(i, "2000" + i);
         }
         System.out.println(map.toString());
-        map.remove("11");
-        map.remove("13");
-        map.remove("32");
-        map.remove("34");
+        map.remove(11);
+        map.remove(13);
+        map.remove(32);
+        map.remove(34);
         System.out.println("---------------------");
         System.out.println(map.toStringDetail());
     }

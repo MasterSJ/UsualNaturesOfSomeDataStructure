@@ -1,11 +1,11 @@
 package top.bmft.hash;
 
-public class HashMap {
+public class HashMap<K,V> {
     private static final float adaptRate = 0.75f;
     private static final int defaultSize = 16;
     private int size;//数组长度
     private int capacity;//元素总数
-    private Node[] box;//具体value存放数组
+    private Node<K,V>[] box;//具体value存放数组
     private int threshold;//扩容临界值
     
     public HashMap(int size){
@@ -27,9 +27,9 @@ public class HashMap {
         return addr % size;
     }
     
-    public void put(String key, Object value){
+    public void put(K key, V value){
         int index = hash(key);
-        Node node = box[index];
+        Node<K,V> node = box[index];
         if(node == null){
             box[index] = new Node(key, value);
             capacity++;
@@ -39,19 +39,19 @@ public class HashMap {
         adaptCapacity();
     }
     
-    public Object remove(String key){
+    public Object remove(K key){
         if(key == null){
             return null;
         }
         int index = hash(key);
-        Node node = box[index];
+        Node<K,V> node = box[index];
         if(node == null){
             return null;
         } else if(key.equals(node.k)){
             box[index] = node.next;
             capacity--;
         } else {
-            Node p = node;
+            Node<K,V> p = node;
             node = node.next;
             while(node != null){
                 if(key.equals(node.k)){
@@ -77,18 +77,18 @@ public class HashMap {
         int oldSize = size;
         size = oldSize << 1;
         threshold = threshold << 1;
-        Node[] newBox = new Node[size];
+        Node<K,V>[] newBox = new Node[size];
         for(int i = 0; i < oldSize; i++){
-            Node node = box[i];
+            Node<K,V> node = box[i];
             while(node != null){
                 int index = hash(node.k);
-                Node newNode = newBox[index];
+                Node<K,V> newNode = newBox[index];
                 if(newNode == null){
                     newBox[index] = node;
                 } else {
                     newBox[index] = newNode.add(node.k, node.v);
                 }
-                Node temp = node.next;
+                Node<K,V> temp = node.next;
                 node.next = null;
                 node = temp;
             } 
@@ -101,7 +101,7 @@ public class HashMap {
             return null;
         }
         int index = hash(key);
-        Node node = box[index];
+        Node<K,V> node = box[index];
         while(node != null){
             if(key.equals(node.k)){
                 return node.v;
@@ -112,18 +112,18 @@ public class HashMap {
         return null;
     }
     
-    class Node {
-        String k;
-        Object v;
-        Node next;
-        public Node(String key, Object obj){
+    class Node<K,V> {
+        K k;
+        V v;
+        Node<K,V> next;
+        public Node(K key, V obj){
             k = key;
             v = obj;
             next = null;
         }
         
-        public Node merge(String key, Object obj){
-            Node node = this;
+        public Node<K,V> merge(K key, V obj){
+            Node<K,V> node = this;
             while(node != null){
                 if(key.equals(node.k)){
                     node.v = obj;
@@ -140,8 +140,8 @@ public class HashMap {
             }
         }
         
-        public Node add(String key, Object obj){
-            Node node = new Node(key, obj);
+        public Node<K,V> add(K key, V obj){
+            Node<K,V> node = new Node<>(key, obj);
             node.next = this;
             return node;
         }
@@ -150,7 +150,7 @@ public class HashMap {
     public String toString(){
         StringBuilder sb = new StringBuilder("{");
         for(int i = 0; i < size; i++){
-            Node node = box[i];
+            Node<K,V> node = box[i];
             while(node != null){
                 if(sb.length() > 1){
                     sb.append(", ");
@@ -166,7 +166,7 @@ public class HashMap {
     public String toStringDetail(){
         StringBuilder sb = new StringBuilder("{\n");
         for(int i = 0; i < size; i++){
-            Node node = box[i];
+            Node<K,V> node = box[i];
             sb.append("bucket" + i + "[");
             int innerCount = 0;
             while(node != null){
