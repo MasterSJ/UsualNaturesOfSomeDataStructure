@@ -12,9 +12,9 @@ public class TestHashMap {
     }
     
     public static void testRemove(){
-        HashMap<Integer, String> map = new HashMap();
+        HashMap<Integer, String> map = new HashMap<>();
         for(int i=0; i < 40; i++){
-            map.put(i, "2000" + i);
+            map.put(i, "00" + i*(i+1));
         }
         System.out.println(map.toString());
         map.remove(11);
@@ -27,7 +27,7 @@ public class TestHashMap {
     
     public static void testMyMap(){
         System.out.println();
-        HashMap map = new HashMap();
+        HashMap<String, String> map = new HashMap<>();
         long[] pay = new long[50];
         long start = System.nanoTime();
         long interval = 0;
@@ -49,7 +49,7 @@ public class TestHashMap {
 
     public static void testJdkMap(){
         System.out.println();
-        java.util.HashMap map = new java.util.HashMap();
+        java.util.HashMap<String, String> map = new java.util.HashMap<>();
         long[] pay = new long[50];
         long start = System.nanoTime();
         long interval = 0;
