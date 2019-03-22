@@ -197,7 +197,7 @@ public class Heap<HeapElement> {
     
     private void appendSpaces(StringBuilder sb, int num){
         for(int i=0; i< num; i++){
-            sb.append("  ");
+            sb.append(" ");
         }
     }
     
